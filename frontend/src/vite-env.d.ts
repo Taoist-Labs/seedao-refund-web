@@ -6,17 +6,6 @@ declare module '*.vue' {
   export default component
 }
 
-interface ImportMetaEnv {
-  readonly VITE_SCR_TOKEN_ADDRESS: string
-  readonly VITE_USDT_TOKEN_ADDRESS: string
-  readonly VITE_BURNER_CONTRACT_ADDRESS: string
-  readonly VITE_WALLETCONNECT_PROJECT_ID: string
-}
-
-interface ImportMeta {
-  readonly env: ImportMetaEnv
-}
-
 // Ethereum provider types
 interface EthereumProvider {
   isMetaMask?: boolean

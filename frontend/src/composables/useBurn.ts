@@ -5,16 +5,17 @@ import { useContract } from './useContract'
 import type { TransactionStatus, BurnResult } from '@/types/contracts'
 import { config } from '../config'
 
+// Shared state - singleton pattern
+const txStatus = ref<TransactionStatus>({
+  status: 'idle',
+  message: '',
+  txHash: undefined,
+  error: undefined,
+})
+
 export function useBurn() {
   const { provider, address } = useWagmiWallet()
   const { getSCRContractWithSigner, getBurnerContractWithSigner, fetchBalances } = useContract()
-
-  const txStatus = ref<TransactionStatus>({
-    status: 'idle',
-    message: '',
-    txHash: undefined,
-    error: undefined,
-  })
 
   /**
    * Check if SCR allowance is sufficient
@@ -68,11 +69,7 @@ export function useBurn() {
 
       await tx.wait()
 
-      txStatus.value = {
-        status: 'idle',
-        message: 'Approval successful',
-        txHash: tx.hash,
-      }
+      console.log('[approveSCR] Approval confirmed')
 
       return true
     } catch (error: any) {

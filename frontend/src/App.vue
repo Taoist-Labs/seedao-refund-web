@@ -65,12 +65,6 @@
               <div class="divider"></div>
               <BurnInterface @status-change="handleStatusChange" />
             </div>
-
-            <!-- Transaction Status -->
-            <TransactionStatus
-              :tx-status="txStatus"
-              @close="handleCloseStatus"
-            />
           </div>
         </template>
 
@@ -87,11 +81,22 @@
       </div>
     </main>
 
+    <!-- Toast Notifications -->
+    <ToastNotification
+      :show="showToast"
+      :type="toastType"
+      :title="toastTitle"
+      :message="toastMessage"
+      :tx-hash="toastTxHash"
+      :closeable="toastCloseable"
+      @close="handleCloseToast"
+    />
+
     <!-- Footer -->
     <footer class="footer">
       <div class="footer-content">
         <p class="footer-text">
-          Powered by Polygon • Built with Vue 3 & Ethers.js v6
+          © {{ new Date().getFullYear() }} Taoist Labs. All rights reserved.
         </p>
       </div>
     </footer>
@@ -102,7 +107,7 @@
 import { ref, computed } from 'vue'
 import BalanceDisplay from './components/BalanceDisplay.vue'
 import BurnInterface from './components/BurnInterface.vue'
-import TransactionStatus from './components/TransactionStatus.vue'
+import ToastNotification from './components/ToastNotification.vue'
 import { useWagmiWallet } from './composables/useWagmiWallet'
 import { useBurn } from './composables/useBurn'
 
@@ -125,6 +130,41 @@ const showSwitchNetwork = ref(false)
 const shortAddress = computed(() => {
   if (!address.value) return ''
   return `${address.value.slice(0, 6)}...${address.value.slice(-4)}`
+})
+
+// Toast computed properties
+const showToast = computed(() => {
+  const shouldShow = txStatus.value.status !== 'idle'
+  console.log('[App.vue] showToast:', shouldShow, 'txStatus:', txStatus.value)
+  return shouldShow
+})
+
+const toastType = computed(() => {
+  const status = txStatus.value.status
+  if (status === 'approving' || status === 'burning') return 'loading'
+  if (status === 'success') return 'success'
+  if (status === 'error') return 'error'
+  return 'info'
+})
+
+const toastTitle = computed(() => {
+  const status = txStatus.value.status
+  if (status === 'approving') return 'Approving SCR...'
+  if (status === 'burning') return 'Burning SCR...'
+  if (status === 'success') return 'Burn Successful!'
+  if (status === 'error') return 'Transaction Failed'
+  return ''
+})
+
+const toastMessage = computed(() => {
+  return txStatus.value.message || txStatus.value.error || ''
+})
+
+const toastTxHash = computed(() => txStatus.value.txHash)
+
+const toastCloseable = computed(() => {
+  const status = txStatus.value.status
+  return status === 'success' || status === 'error'
 })
 
 // Methods
@@ -150,7 +190,7 @@ function handleStatusChange() {
   // Status changes are handled by the composable
 }
 
-function handleCloseStatus() {
+function handleCloseToast() {
   resetStatus()
 }
 

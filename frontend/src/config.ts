@@ -8,9 +8,9 @@
 export const config = {
   // Contract Addresses (update after deployment)
   contracts: {
-    scrToken: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
-    usdtToken: '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512',
-    burner: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
+    scrToken: '0x8A791620dd6260079BF849Dc5567aDC3F2FdC318',
+    usdtToken: '0x610178dA211FEF7D417bC0e6FeD39F05609AD788',
+    burner: '0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0',
   },
 
   // Supported Networks

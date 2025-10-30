@@ -5,8 +5,8 @@ async function main() {
 
   console.log("🎁 Sending test tokens to:", recipientAddress);
 
-  const scrAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
-  const usdtAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
+  const scrAddress = "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318";
+  const usdtAddress = "0x610178dA211FEF7D417bC0e6FeD39F05609AD788";
 
   const scr = await hre.ethers.getContractAt("TestSCR", scrAddress);
   const usdt = await hre.ethers.getContractAt("TestUSDT", usdtAddress);
