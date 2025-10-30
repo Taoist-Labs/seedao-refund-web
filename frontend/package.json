@@ -9,9 +9,12 @@
   },
   "dependencies": {
     "@joyid/evm": "^0.4.4",
+    "@tanstack/vue-query": "^5.60.5",
+    "@wagmi/connectors": "^5.5.3",
     "@wagmi/core": "^2.15.2",
     "@wagmi/vue": "^0.0.40",
     "@web3modal/wagmi": "^5.1.11",
+    "ethers": "^6.13.0",
     "viem": "^2.21.54",
     "vue": "^3.4.21"
   },
