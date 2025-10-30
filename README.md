@@ -8,8 +8,9 @@ Burn SCR tokens and receive USDT at a configurable exchange rate.
 # Install dependencies
 npm install --legacy-peer-deps
 
-# Compile contracts
+# Compile contracts and export ABIs
 npm run compile
+npm run export-abis
 
 # Terminal 1: Start local node
 npm run node
@@ -83,10 +84,13 @@ PROXY_ADDRESS=0x... npx hardhat run scripts/upgrade.ts --network polygon
 ```bash
 npm run node         # Start Hardhat network
 npm run compile      # Compile contracts
+npm run export-abis  # Export contract ABIs to frontend/src/abis/
 npm test             # Run tests
 npm run dev          # Start frontend (from frontend/)
 npm run build        # Build frontend
 ```
+
+**Important:** After modifying smart contracts, run both `npm run compile` and `npm run export-abis` to update the frontend ABIs.
 
 ## Configuration
 
@@ -115,9 +119,11 @@ contracts: {
 │   ├── deploySCRBurner.ts       # Deploy burner (universal)
 │   ├── grantBurnerRole.ts       # Grant BURNER_ROLE (mainnet)
 │   ├── sendTokens.ts            # Send test assets (local only)
-│   └── upgrade.ts               # Upgrade burner (universal)
+│   ├── upgrade.ts               # Upgrade burner (universal)
+│   └── exportABIs.ts            # Export ABIs to frontend
 ├── frontend/              # Vue 3 frontend
 │   └── src/
+│       ├── abis/          # Exported contract ABIs (committed to git)
 │       ├── config.ts      # Contract addresses & network config
 │       └── ...
 ```

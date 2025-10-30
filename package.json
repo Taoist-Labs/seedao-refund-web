@@ -7,7 +7,8 @@
     "preview": "vite preview",
     "test": "hardhat test",
     "compile": "hardhat compile",
-    "node": "hardhat node"
+    "node": "hardhat node",
+    "export-abis": "hardhat run scripts/exportABIs.ts"
   },
   "dependencies": {
     "ethers": "^6.10.0",
