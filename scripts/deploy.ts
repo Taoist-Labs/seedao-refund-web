@@ -36,6 +36,12 @@ async function main() {
   const burnerAddress = await burnerContract.getAddress();
   console.log("✅ SCRBurner deployed to:", burnerAddress);
 
+  // Grant BURNER_ROLE to SCRBurner contract
+  console.log("\n🔐 Granting BURNER_ROLE to SCRBurner...");
+  const BURNER_ROLE = hre.ethers.keccak256(hre.ethers.toUtf8Bytes("BURNER_ROLE"));
+  await scrToken.grantRole(BURNER_ROLE, burnerAddress);
+  console.log("✅ BURNER_ROLE granted to SCRBurner");
+
   // Fund the burner contract with USDT
   console.log("\n💵 Funding SCRBurner with USDT...");
   const fundAmount = hre.ethers.parseUnits("10000", 6); // 10,000 USDT
