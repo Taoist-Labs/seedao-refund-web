@@ -23,9 +23,8 @@ export default defineConfig({
           // Core Vue framework
           'vue-core': ['vue'],
 
-          // Blockchain libraries - only loaded when needed
-          'web3-wagmi': ['@wagmi/core', '@wagmi/vue'],
-          'web3-viem': ['viem'],
+          // Blockchain libraries - group wagmi + viem together to avoid circular deps
+          'web3-wagmi': ['@wagmi/core', '@wagmi/vue', '@wagmi/connectors', 'viem'],
           'web3-modal': ['@web3modal/wagmi'],
           'web3-joyid': ['@joyid/evm'],
 
