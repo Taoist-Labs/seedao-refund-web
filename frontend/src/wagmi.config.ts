@@ -70,9 +70,14 @@ const wagmiConfigRaw = createConfig({
 export const wagmiConfig = wagmiConfigRaw
 export { defaultChain }
 
-// Create Web3Modal instance
-export const modal = config.walletConnect.projectId
-  ? createWeb3Modal({
+// Lazy-initialize Web3Modal - only create when user connects wallet
+let modalInstance: ReturnType<typeof createWeb3Modal> | null = null
+
+export const getModal = () => {
+  if (!config.walletConnect.projectId) return null
+
+  if (!modalInstance) {
+    modalInstance = createWeb3Modal({
       // @ts-ignore - Wagmi connector types have minor version incompatibilities between packages
       wagmiConfig,
       projectId: config.walletConnect.projectId,
@@ -83,4 +88,7 @@ export const modal = config.walletConnect.projectId
         '--w3m-border-radius-master': '8px',
       },
     })
-  : null
+  }
+
+  return modalInstance
+}

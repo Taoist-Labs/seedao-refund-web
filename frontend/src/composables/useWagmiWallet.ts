@@ -7,7 +7,7 @@
 import { computed } from 'vue'
 import { useAccount, useDisconnect, useSwitchChain, useConnectorClient } from '@wagmi/vue'
 import { BrowserProvider } from 'ethers'
-import { modal, hardhatLocal } from '../wagmi.config'
+import { getModal, hardhatLocal } from '../wagmi.config'
 import { config } from '../config'
 
 export function useWagmiWallet() {
@@ -61,6 +61,7 @@ export function useWagmiWallet() {
    * Open Web3Modal to connect wallet
    */
   function openModal() {
+    const modal = getModal()
     if (modal) {
       modal.open()
     } else {

@@ -104,10 +104,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import BalanceDisplay from './components/BalanceDisplay.vue'
-import BurnInterface from './components/BurnInterface.vue'
-import ToastNotification from './components/ToastNotification.vue'
+import { ref, computed, defineAsyncComponent } from 'vue'
+// Lazy load heavy components - only load when wallet is connected
+const BalanceDisplay = defineAsyncComponent(() => import('./components/BalanceDisplay.vue'))
+const BurnInterface = defineAsyncComponent(() => import('./components/BurnInterface.vue'))
+const ToastNotification = defineAsyncComponent(() => import('./components/ToastNotification.vue'))
 import { useWagmiWallet } from './composables/useWagmiWallet'
 import { useBurn } from './composables/useBurn'
 
