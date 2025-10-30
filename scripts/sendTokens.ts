@@ -3,8 +3,22 @@ import hre from "hardhat";
 async function main() {
   const recipientAddress = "0x5b98db836629513511377F127376A70ddB3A774E";
 
-  console.log("🎁 Sending test tokens to:", recipientAddress);
+  console.log("🎁 Sending test assets to:", recipientAddress);
+  console.log("");
 
+  const [sender] = await hre.ethers.getSigners();
+
+  // Send 100 ETH
+  console.log("📤 Sending 100 ETH...");
+  const ethAmount = hre.ethers.parseEther("100");
+  const ethTx = await sender.sendTransaction({
+    to: recipientAddress,
+    value: ethAmount
+  });
+  await ethTx.wait();
+  console.log("✅ 100 ETH sent!");
+
+  // Get contract addresses
   const scrAddress = "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318";
   const usdtAddress = "0x610178dA211FEF7D417bC0e6FeD39F05609AD788";
 
@@ -25,11 +39,13 @@ async function main() {
   await usdtTx.wait();
   console.log("✅ 500 USDT sent!");
 
-  // Check balances
+  // Check all balances
+  const ethBalance = await hre.ethers.provider.getBalance(recipientAddress);
   const scrBalance = await scr.balanceOf(recipientAddress);
   const usdtBalance = await usdt.balanceOf(recipientAddress);
 
   console.log("\n💰 Your balances:");
+  console.log("  ETH:  ", hre.ethers.formatEther(ethBalance));
   console.log("  SCR:  ", hre.ethers.formatEther(scrBalance));
   console.log("  USDT: ", hre.ethers.formatUnits(usdtBalance, 6));
 
@@ -42,3 +58,4 @@ main().catch((error) => {
   console.error(error);
   process.exitCode = 1;
 });
+

@@ -2,7 +2,7 @@
 
 Burn SCR tokens and receive USDT at a configurable exchange rate.
 
-## Quick Start
+## Quick Start (Local Development)
 
 ```bash
 # Install dependencies
@@ -11,13 +11,17 @@ npm install --legacy-peer-deps
 # Compile contracts
 npm run compile
 
-# Start local node (terminal 1)
+# Terminal 1: Start local node
 npm run node
 
-# Deploy contracts (terminal 2)
-npx hardhat run scripts/deploy.ts --network localhost
+# Terminal 2: Deploy test tokens and burner contract
+npx hardhat run scripts/deployTestTokens.ts --network localhost
+npx hardhat run scripts/deploySCRBurner.ts --network localhost
 
-# Start frontend
+# Terminal 2: Send test assets to your wallet
+npx hardhat run scripts/sendTokens.ts --network localhost
+
+# Terminal 3: Start frontend
 cd frontend && npm run dev
 ```
 
@@ -31,16 +35,48 @@ cd frontend && npm run dev
 ## Tech Stack
 
 **Frontend:** Vue 3, TypeScript, Vite, Wagmi, Tailwind CSS
-**Contracts:** Solidity 0.8.20, Hardhat, OpenZeppelin, TypeChain
+**Contracts:** Solidity 0.8.22, Hardhat, OpenZeppelin Upgradeable, TypeChain
 
 ## Contracts
 
-**SCRBurner** - Main contract accepting SCR and distributing USDT
+**SCRBurnerUpgradeable** - Upgradeable contract (UUPS proxy) for burning SCR tokens
 - Default rate: 1 SCR = 0.03 USDT
-- Owner can update rate, fund pool, pause/unpause
+- Owner can update rate, fund pool, pause/unpause, and upgrade implementation
+- Proxy pattern allows contract upgrades without changing address
 
-**TestSCR** - ERC20 (18 decimals) for testing
-**TestUSDT** - ERC20 (6 decimals) for testing
+**TestSCR** - ERC20 (18 decimals) with burnable tokens for local testing
+**TestUSDT** - ERC20 (6 decimals) for local testing
+
+## Deployment Scripts
+
+### Local Development
+```bash
+# Deploy test tokens (TestSCR and TestUSDT)
+npx hardhat run scripts/deployTestTokens.ts --network localhost
+
+# Deploy upgradeable burner contract
+npx hardhat run scripts/deploySCRBurner.ts --network localhost
+
+# Send test assets (ETH, SCR, USDT) to your wallet
+npx hardhat run scripts/sendTokens.ts --network localhost
+
+# Upgrade burner contract (optional)
+PROXY_ADDRESS=0x... npx hardhat run scripts/upgrade.ts --network localhost
+```
+
+### Polygon Mainnet
+```bash
+# Deploy upgradeable burner contract
+SCR_TOKEN=0xE4825A1a31a76f72befa47f7160B132AA03813E0 \
+USDT_TOKEN=0xc2132D05D31c914a87C6611C10748AEb04B58e8F \
+npx hardhat run scripts/deploySCRBurner.ts --network polygon
+
+# Grant BURNER_ROLE to deployed contract
+BURNER_CONTRACT_ADDRESS=0x... npx hardhat run scripts/grantBurnerRole.ts --network polygon
+
+# Upgrade burner contract
+PROXY_ADDRESS=0x... npx hardhat run scripts/upgrade.ts --network polygon
+```
 
 ## Key Commands
 
@@ -59,12 +95,37 @@ Contract addresses are in `frontend/src/config.ts` (not environment variables).
 Update after deployment:
 ```typescript
 contracts: {
-  scrToken: '0x...',
-  usdtToken: '0x...',
-  burner: '0x...',
+  scrToken: '0x...',    // SCR token address
+  usdtToken: '0x...',   // USDT token address
+  burner: '0x...',      // SCRBurner PROXY address (not implementation)
 }
+```
+
+**Important:** Always use the **proxy address** for the burner contract, not the implementation address.
+
+## Project Structure
+
+```
+├── contracts/              # Smart contracts
+│   ├── SCRBurnerUpgradeable.sol  # Main burner contract (upgradeable)
+│   ├── TestSCR.sol        # Test SCR token
+│   └── TestUSDT.sol       # Test USDT token
+├── scripts/               # Deployment scripts
+│   ├── deployTestTokens.ts      # Deploy test tokens (local only)
+│   ├── deploySCRBurner.ts       # Deploy burner (universal)
+│   ├── grantBurnerRole.ts       # Grant BURNER_ROLE (mainnet)
+│   ├── sendTokens.ts            # Send test assets (local only)
+│   └── upgrade.ts               # Upgrade burner (universal)
+├── frontend/              # Vue 3 frontend
+│   └── src/
+│       ├── config.ts      # Contract addresses & network config
+│       └── ...
 ```
 
 ## License
 
 MIT
+
+---
+
+Built by [Taoist Labs](https://github.com/taoist-labs)
