@@ -8,9 +8,9 @@
 export const config = {
   // Contract Addresses (update after deployment)
   contracts: {
-    scrToken: '0x8A791620dd6260079BF849Dc5567aDC3F2FdC318',
-    usdtToken: '0x610178dA211FEF7D417bC0e6FeD39F05609AD788',
-    burner: '0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0',
+    scrToken: '0xE4825A1a31a76f72befa47f7160B132AA03813E0',  // ScoreV4 on Polygon mainnet
+    usdtToken: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F', // USDT on Polygon mainnet
+    burner: '0x0000000000000000000000000000000000000000',    // UPDATE AFTER DEPLOYMENT
   },
 
   // Supported Networks
@@ -49,7 +49,7 @@ export const config = {
   },
 
   // Default network
-  defaultNetwork: 'hardhatLocal' as const,
+  defaultNetwork: 'polygon' as const,
 } as const
 
 export type Config = typeof config

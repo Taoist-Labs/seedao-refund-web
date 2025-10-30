@@ -104,6 +104,13 @@ export function useWagmiWallet() {
   }
 
   /**
+   * Switch to Polygon Mainnet
+   */
+  async function switchToPolygon(): Promise<void> {
+    await switchChain(config.networks.polygon.id)
+  }
+
+  /**
    * Connect with JoyID - uses Web3Modal
    */
   async function connectJoyID(): Promise<void> {
@@ -129,5 +136,6 @@ export function useWagmiWallet() {
     disconnect,
     switchChain,
     switchToHardhatLocal,
+    switchToPolygon,
   }
 }

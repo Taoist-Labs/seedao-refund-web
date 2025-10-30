@@ -28,6 +28,9 @@ export const hardhatLocal = {
   testnet: true,
 } as const
 
+// Get the default chain based on config
+const defaultChain = config.defaultNetwork === 'polygon' ? polygon : hardhatLocal
+
 // Create Wagmi config
 const wagmiConfigRaw = createConfig({
   chains: [polygon, hardhatLocal],
@@ -65,6 +68,7 @@ const wagmiConfigRaw = createConfig({
 })
 
 export const wagmiConfig = wagmiConfigRaw
+export { defaultChain }
 
 // Create Web3Modal instance
 export const modal = config.walletConnect.projectId

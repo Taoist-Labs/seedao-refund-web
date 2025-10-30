@@ -27,7 +27,7 @@
             <!-- Dropdown Menu -->
             <div v-if="showSwitchNetwork" class="account-dropdown">
               <button v-if="!isCorrectChain" @click="handleSwitchNetwork" class="dropdown-item">
-                🔄 Switch to Hardhat Local
+                {{ switchNetworkLabel }}
               </button>
               <button @click="handleDisconnect" class="dropdown-item disconnect">
                 ⚡ Disconnect
@@ -117,6 +117,7 @@ const {
   chainName,
   isCorrectChain,
   switchToHardhatLocal,
+  switchToPolygon,
   disconnect,
   openModal
 } = useWagmiWallet()
@@ -125,6 +126,19 @@ const { txStatus, resetStatus } = useBurn()
 
 // UI state
 const showSwitchNetwork = ref(false)
+
+// Check if we should show switch to hardhat or polygon
+const targetNetwork = computed(() => {
+  const currentChain = chainName.value
+  if (currentChain === 'Polygon Mainnet') return 'hardhat'
+  return 'polygon'
+})
+
+const switchNetworkLabel = computed(() => {
+  return targetNetwork.value === 'polygon'
+    ? '🔄 Switch to Polygon Mainnet'
+    : '🔄 Switch to Hardhat Local'
+})
 
 // Computed
 const shortAddress = computed(() => {
@@ -174,7 +188,11 @@ function openWalletModal() {
 
 async function handleSwitchNetwork() {
   try {
-    await switchToHardhatLocal()
+    if (targetNetwork.value === 'polygon') {
+      await switchToPolygon()
+    } else {
+      await switchToHardhatLocal()
+    }
     showSwitchNetwork.value = false
   } catch (error) {
     console.error('Failed to switch network:', error)
