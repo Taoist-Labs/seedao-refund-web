@@ -24,7 +24,7 @@ dist-ssr
 *.sw?
 
 # Hardhat files
-cache
+cache/solidity-files-cache.json
 artifacts
 typechain-types
 

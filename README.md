@@ -120,6 +120,7 @@ contracts: {
 │   ├── grantBurnerRole.ts       # Grant BURNER_ROLE (mainnet)
 │   ├── sendTokens.ts            # Send test assets (local only)
 │   ├── upgrade.ts               # Upgrade burner (universal)
+│   ├── checkState.ts            # Check contract state
 │   └── exportABIs.ts            # Export ABIs to frontend
 ├── frontend/              # Vue 3 frontend
 │   └── src/
