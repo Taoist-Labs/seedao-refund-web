@@ -11,6 +11,7 @@
     "export-abis": "hardhat run scripts/exportABIs.ts"
   },
   "dependencies": {
+    "@web3camp/hardhat-metamask-connector": "^1.2.0",
     "ethers": "^6.10.0",
     "vue": "^3.4.21"
   },
