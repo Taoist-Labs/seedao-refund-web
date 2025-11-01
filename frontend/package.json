@@ -1,11 +1,13 @@
 {
-  "name": "seedao-scr-burner",
+  "name": "seedao-scr-burner-frontend",
   "version": "0.1.0",
+  "description": "Vue 3 frontend for SCR token burner dApp",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "type-check": "vue-tsc --noEmit"
   },
   "dependencies": {
     "@joyid/evm": "^0.4.4",
