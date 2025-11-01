@@ -1,6 +1,6 @@
-# SCR Token Burner
+# SCR Burner
 
-Burn SCR tokens and receive USDT at a configurable exchange rate.
+Burn SCR and receive USDT.
 
 ## Quick Start (Local Development)
 

@@ -1,4 +1,5 @@
 import hre from "hardhat";
+import { MetamaskConnector } from "@web3camp/hardhat-metamask-connector";
 
 /**
  * Deploy upgradeable SCRBurner contract
@@ -16,6 +17,7 @@ import hre from "hardhat";
  */
 async function main() {
   const upgrades = (hre as any).upgrades;
+  const connector = new MetamaskConnector();
 
   // Detect network
   const networkName = hre.network.name;
@@ -23,7 +25,8 @@ async function main() {
 
   console.log(`🚀 Deploying SCRBurnerUpgradeable to ${networkName}...\n`);
 
-  const [deployer] = await hre.ethers.getSigners();
+  // const [deployer] = await hre.ethers.getSigners();
+  const deployer = await connector.getSigner();
   console.log("📝 Deploying with account:", deployer.address);
   console.log("💰 Account balance:", hre.ethers.formatEther(await hre.ethers.provider.getBalance(deployer.address)), isLocalhost ? "ETH" : "MATIC", "\n");
 
@@ -65,7 +68,8 @@ async function main() {
     ],
     {
       kind: 'uups',
-      initializer: 'initialize'
+      initializer: 'initialize',
+      signer:deployer
     }
   );
 
@@ -77,42 +81,6 @@ async function main() {
 
   console.log("✅ SCRBurnerUpgradeable Proxy deployed to:", burnerAddress);
   console.log("✅ Implementation address:", implementationAddress);
-
-  // Grant BURNER_ROLE to SCRBurner contract (if deployer has admin role)
-  console.log("\n🔐 Granting BURNER_ROLE to SCRBurner...");
-  const BURNER_ROLE = hre.ethers.keccak256(hre.ethers.toUtf8Bytes("BURNER_ROLE"));
-
-  try {
-    const scrToken = await hre.ethers.getContractAt("TestSCR", scrAddress);
-    const DEFAULT_ADMIN_ROLE = "0x0000000000000000000000000000000000000000000000000000000000000000";
-    const hasAdminRole = await scrToken.hasRole(DEFAULT_ADMIN_ROLE, deployer.address);
-
-    if (hasAdminRole) {
-      await scrToken.grantRole(BURNER_ROLE, burnerAddress);
-      console.log("✅ BURNER_ROLE granted to SCRBurner");
-    } else {
-      console.log("⚠️  Skipping BURNER_ROLE grant - deployer is not admin of SCR token");
-      console.log("   Run grantBurnerRole.ts script with admin account");
-    }
-  } catch (error) {
-    console.log("⚠️  Could not grant BURNER_ROLE - run grantBurnerRole.ts script manually");
-  }
-
-  // Fund the burner contract with USDT (if available)
-  if (isLocalhost) {
-    console.log("\n💵 Funding SCRBurner with USDT...");
-    try {
-      const usdtToken = await hre.ethers.getContractAt("TestUSDT", usdtAddress);
-      const fundAmount = hre.ethers.parseUnits("10000", 6); // 10,000 USDT
-      await usdtToken.approve(burnerAddress, fundAmount);
-      await burnerContract.fundUSDTPool(fundAmount);
-      console.log("✅ Funded with", hre.ethers.formatUnits(fundAmount, 6), "USDT");
-    } catch (error) {
-      console.log("⚠️  Could not fund USDT pool - do it manually later");
-    }
-  } else {
-    console.log("\n💡 Remember to fund the burner contract with USDT!");
-  }
 
   // Print summary
   console.log("\n" + "=".repeat(60));
@@ -131,6 +99,10 @@ async function main() {
   console.log("\n💡 The proxy address is what users interact with.");
   console.log("💡 Implementation can be upgraded without changing proxy address.");
   console.log("\n✨ Deployment complete!\n");
+
+
+  console.log("\n💡 Remember to grant BURNER_ROLE of SCR token to the burner contract!")
+  console.log("\n💡 Remember to fund the burner contract with USDT!");
 }
 
 main().catch((error) => {
