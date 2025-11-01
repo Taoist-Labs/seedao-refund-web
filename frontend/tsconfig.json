@@ -24,11 +24,9 @@
     /* Path aliases */
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@artifacts/*": ["../artifacts/*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
-  "exclude": ["test/**/*", "scripts/**/*"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
